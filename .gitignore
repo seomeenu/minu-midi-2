@@ -2,3 +2,6 @@
 /midis/*
 /res/*
 /temp_images_folder
+/dist*
+/build
+*.spec

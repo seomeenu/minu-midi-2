@@ -66,7 +66,12 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
     with open(input_path) as file:
         data = json.load(file)
         bpm = data["header"]["bpm"]
-        notes = data["tracks"][1]["notes"]
+        track_index = 0
+        #finds the track with notes
+        for i, track in enumerate(data["tracks"]):
+            if track["notes"] != []:
+                track_index = i
+        notes = data["tracks"][track_index]["notes"]
         duration = data["duration"]
 
     bar_duration = 60/bpm*16
