@@ -74,26 +74,16 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
         notes = data["tracks"][track_index]["notes"]
         duration = data["duration"]
 
-    bar_duration = 60/bpm*16
     last_time = 0
 
-    max_note = max(notes, key=lambda x: x["midi"])["midi"]
-    min_note = min(notes, key=lambda x: x["midi"])["midi"]
-    middle = (max_note+min_note)//2
-    height = 10
-    dist = max_note-min_note
-
-    screen_width = bar_duration*100+210
-    screen_height = min(dist*height+100, 720)
+    screen_width = 240
+    screen_height = 240
     screen = pygame.Surface((screen_width, screen_height))
 
     for note in notes:
-        note["anim"] = 25
+        note["anim"] = 12
 
     play_time = 0
-    offset = 0
-    offset_vel = 0
-    scroll = -bar_duration*100
 
     for i in range(int(duration*fps)):
         screen.fill(bg_color)
@@ -101,31 +91,11 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
 
         for note in notes:
             if play_time >= note["time"]:
-                if bar_duration*100-10 >= note["time"]*100-scroll >= -10:
-                    note["anim"] *= 0.7
-                    pygame.draw.rect(screen, fg_color, 
-                        [
-                            note["time"]*100+100-note["anim"]/4-scroll-offset,
-                            (middle-note["midi"])*height+screen_height/2,
-                            note["duration"]*100-note["anim"]/6,
-                            10
-                        ]
-                    )
-        
-        if play_time >= last_time:
-            last_time += bar_duration
-            offset = 100 
-            scroll += bar_duration*100
-
-        if play_time >= last_time-bar_duration/15.7:
-            offset -= offset_vel/20
-            offset_vel *= 1.7
-        else:
-            offset_vel = 1
-
-        offset *= 0.9
-        
-        pygame.image.save(screen, f"temp_images_folder/{i}.png")
+                note["anim"] *= 0.7
+                if int(note["anim"]) > 0:
+                    pygame.draw.rect(screen, fg_color, [20+note["anim"]/2, 29+note["anim"]/2, 200-note["anim"], 200-note["anim"]], int(note["anim"])) 
+            
+            pygame.image.save(screen, f"temp_images_folder/{i}.png")
 
     video = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"XVID"), fps, (int(screen_width), int(screen_height)))
 
@@ -139,3 +109,4 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
     print("done!")
 
 main()
+# convert(30, "X:/files/creations/code/minu-midi-2/midis/test.json", "X:/files/creations/code/minu-midi-2/midis/Enter Filename.mp4", "#000000", "#ffffff")
