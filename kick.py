@@ -76,12 +76,12 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
 
     last_time = 0
 
-    screen_width = 240
-    screen_height = 240
+    screen_width = 480
+    screen_height = 480
     screen = pygame.Surface((screen_width, screen_height))
 
     for note in notes:
-        note["anim"] = 12
+        note["anim"] = 30
 
     play_time = 0
 
@@ -93,9 +93,9 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
             if play_time >= note["time"]:
                 note["anim"] *= 0.7
                 if int(note["anim"]) > 0:
-                    pygame.draw.rect(screen, fg_color, [20+note["anim"]/2, 29+note["anim"]/2, 200-note["anim"], 200-note["anim"]], int(note["anim"])) 
+                    pygame.draw.rect(screen, fg_color, [40+note["anim"]/2, 40+note["anim"]/2, 400-note["anim"], 400-note["anim"]], int(note["anim"])) 
             
-            pygame.image.save(screen, f"temp_images_folder/{i}.png")
+        pygame.image.save(screen, f"temp_images_folder/{i}.png")
 
     video = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"XVID"), fps, (int(screen_width), int(screen_height)))
 
