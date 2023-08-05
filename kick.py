@@ -54,11 +54,30 @@ def main():
         default="#ffffff",
         help="fg color (in hex)"
     )
+    parser.add_argument(
+        "-outlined",
+        required=True,
+        default="yes",
+        help="outlined or not (yes/no)"
+    )
+    parser.add_argument(
+        "-pulse",
+        required=True,
+        default=30,
+        help="pulse strength"
+    )
     args = parser.parse_args()
-    convert(args.fps, args.input_path, args.output_path, args.bg_color, args.fg_color)
+    convert(args.fps, args.input_path, args.output_path, args.bg_color, args.fg_color, args.outlined, args.pulse)
 
-def convert(fps, input_path, output_path, bg_color, fg_color):
+def convert(fps, input_path, output_path, bg_color, fg_color, outlined, pulse):
     clock = pygame.time.Clock()
+
+    outline = True
+    if outlined.lower() == "no":
+        outline = False
+
+    if pulse < 0:
+        pulse = 0
 
     bpm = 120
     notes = []
@@ -81,7 +100,7 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
     screen = pygame.Surface((screen_width, screen_height))
 
     for note in notes:
-        note["anim"] = 30
+        note["anim"] = pulse
 
     play_time = 0
 
@@ -89,11 +108,18 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
         screen.fill(bg_color)
         play_time += 1/fps
 
-        for note in notes:
-            if play_time >= note["time"]:
+        for j, note in enumerate(notes):
+            next_note = note
+            if j+1 < len(notes):
+                next_note = notes[j+1]
+            if next_note["time"] >= play_time >= note["time"]:
                 note["anim"] *= 0.7
-                if int(note["anim"]) > 0:
-                    pygame.draw.rect(screen, fg_color, [40+note["anim"]/2, 40+note["anim"]/2, 400-note["anim"], 400-note["anim"]], int(note["anim"])) 
+                if outline:
+                    border = (int(note["anim"]))
+                    if border > 0:
+                        pygame.draw.rect(screen, fg_color, [40+note["anim"]/2, 40+note["anim"]/2, 400-note["anim"], 400-note["anim"]], border)
+                else:
+                    pygame.draw.rect(screen, fg_color, [40+note["anim"]/2, 40+note["anim"]/2, 400-note["anim"], 400-note["anim"]])
             
         pygame.image.save(screen, f"temp_images_folder/{i}.png")
 
@@ -109,4 +135,3 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
     print("done!")
 
 main()
-# convert(30, "X:/files/creations/code/minu-midi-2/midis/test.json", "X:/files/creations/code/minu-midi-2/midis/Enter Filename.mp4", "#000000", "#ffffff")
