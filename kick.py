@@ -64,6 +64,7 @@ def main():
         "-pulse",
         required=True,
         default=30,
+        type=float,
         help="pulse strength"
     )
     args = parser.parse_args()
