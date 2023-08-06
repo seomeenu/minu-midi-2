@@ -54,10 +54,17 @@ def main():
         default="#ffffff",
         help="fg color (in hex)"
     )
+    parser.add_argument(
+        "-movement",
+        required=True,
+        default=1,
+        type=float,
+        help="strength of the movement"
+    )
     args = parser.parse_args()
-    convert(args.fps, args.input_path, args.output_path, args.bg_color, args.fg_color)
+    convert(args.fps, args.input_path, args.output_path, args.bg_color, args.fg_color, args.movement)
 
-def convert(fps, input_path, output_path, bg_color, fg_color):
+def convert(fps, input_path, output_path, bg_color, fg_color, movement):
     clock = pygame.time.Clock()
 
     bpm = 120
@@ -105,7 +112,7 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
                     note["anim"] *= 0.7
                     pygame.draw.rect(screen, fg_color, 
                         [
-                            note["time"]*100+100-note["anim"]/4-scroll-offset,
+                            note["time"]*100+100-note["anim"]/4-scroll-offset*movement,
                             (middle-note["midi"])*height+screen_height/2,
                             note["duration"]*100-note["anim"]/6,
                             10
@@ -114,7 +121,7 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
         
         if play_time >= last_time:
             last_time += bar_duration
-            offset = 100 
+            offset = 100
             scroll += bar_duration*100
 
         if play_time >= last_time-bar_duration/15.7:
@@ -124,7 +131,7 @@ def convert(fps, input_path, output_path, bg_color, fg_color):
             offset_vel = 1
 
         offset *= 0.9
-        
+            
         pygame.image.save(screen, f"temp_images_folder/{i}.png")
 
     video = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"XVID"), fps, (int(screen_width), int(screen_height)))
