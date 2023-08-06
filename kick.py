@@ -8,7 +8,6 @@ from gooey import Gooey, GooeyParser
 
 pygame.init()
 
-pygame.init()
 if os.path.exists("temp_images_folder"):
     shutil.rmtree("temp_images_folder")
 os.mkdir("temp_images_folder")
@@ -43,25 +42,25 @@ def main():
         help="path of input json"
     )
     parser.add_argument(
-        "-bg_color",
+        "--bg_color",
         required=True,
         default="#000000",
         help="bg color (in hex)"
     )
     parser.add_argument(
-        "-fg_color",
+        "--fg_color",
         required=True,
         default="#ffffff",
         help="fg color (in hex)"
     )
     parser.add_argument(
-        "-outlined",
+        "--outlined",
         required=True,
         default="yes",
         help="outlined or not (yes/no)"
     )
     parser.add_argument(
-        "-pulse",
+        "--pulse",
         required=True,
         default=30,
         type=float,
