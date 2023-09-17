@@ -66,8 +66,8 @@ def convert(fps, duration, output_path, font_path):
         screen.fill("#ffffff")
         play_time += 1/fps
 
-        m, s = divmod(int(play_time), 60)
-        draw_text(screen, f"{m}:{s}", 10, 0)
+        m, s = divmod(play_time, 60)
+        draw_text(screen, f"{int(m)}:{round(s, 1)}", 10, 0)
 
         counter += 1
         pygame.image.save(screen, f"temp_images_folder/{counter}.png")
