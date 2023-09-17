@@ -90,9 +90,10 @@ def convert(fps, input_path, output_path, bg_color, fg_color, movement):
     dist = max_note-min_note
 
     screen_width = bar_duration*100+210
-    screen_height = min(dist*height+100, 720)
+    screen_height = abs(dist)*height+100
+    # screen_height = min(dist*height+100, 720)
     screen = pygame.Surface((screen_width, screen_height))
-
+    
     for note in notes:
         note["anim"] = 25
 
@@ -145,3 +146,4 @@ def convert(fps, input_path, output_path, bg_color, fg_color, movement):
     print("done!")
 
 main()
+# convert(60, "midis/test.json", "midis/asdf.mp4", "#000000", "#ffffff", 1)
